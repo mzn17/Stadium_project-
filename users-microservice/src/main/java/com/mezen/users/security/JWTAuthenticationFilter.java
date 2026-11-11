@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -82,11 +83,20 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void unsuccessfulAuthentication(HttpServletRequest request,
 			HttpServletResponse response, AuthenticationException failed)
 			throws IOException, ServletException {
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+
+		// Compte non activé : le front affiche un message spécifique.
+		if (failed instanceof DisabledException) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.getWriter().write(
+					"{\"errorCause\":\"disabled\",\"message\":\"L'utilisateur est désactivé !\"}");
+			return;
+		}
+
 		// Évite la redirection HTML par défaut vers /login?error :
 		// le front Angular reçoit un vrai 401 avec un message JSON.
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 		response.getWriter().write(
 				"{\"error\":\"Unauthorized\",\"message\":\"login ou mot de passe erronés\"}");
 	}

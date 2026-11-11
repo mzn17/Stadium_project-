@@ -18,6 +18,7 @@ public class UsersMicroserviceApplication {
 		SpringApplication.run(UsersMicroserviceApplication.class, args);
 	}
 
+
 	/**
 	 * Initialisation idempotente : ne recrée pas les rôles / utilisateurs
 	 * s'ils existent déjà. Sans cela, le démarrage suivant plantait avec
@@ -33,9 +34,9 @@ public class UsersMicroserviceApplication {
 			userService.addRole(new Role(null, "USER"));
 
 		// ajouter les utilisateurs s'ils n'existent pas
-		createUserIfAbsent("admin", "123");
-		createUserIfAbsent("mezen", "123");
-		createUserIfAbsent("yassine", "123");
+		createUserIfAbsent("admin", "admin@messtades.com", "123");
+		createUserIfAbsent("mezen", "mezen@messtades.com", "123");
+		createUserIfAbsent("yassine", "yassine@messtades.com", "123");
 
 		// ajouter les rôles aux utilisateurs (sans doublon)
 		userService.addRoleToUser("admin", "ADMIN");
@@ -44,9 +45,9 @@ public class UsersMicroserviceApplication {
 		userService.addRoleToUser("yassine", "USER");
 	}
 
-	private void createUserIfAbsent(String username, String password) {
+	private void createUserIfAbsent(String username, String email, String password) {
 		if (userService.findUserByUsername(username) == null) {
-			userService.saveUser(new User(null, username, password, true, null));
+			userService.saveUser(new User(null, username, password, true, email, null));
 		}
 	}
 }
