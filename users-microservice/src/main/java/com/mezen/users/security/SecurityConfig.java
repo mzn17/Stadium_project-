@@ -44,6 +44,7 @@ public class SecurityConfig {
 			}))
 			.authorizeHttpRequests(requests -> requests
 				.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+				.requestMatchers("/error").permitAll()
 				.requestMatchers("/login", "/register", "/verifyEmail/**").permitAll()
 				.requestMatchers("/all").hasAuthority("ADMIN")
 				.anyRequest().authenticated())

@@ -72,7 +72,12 @@ public class UserServiceImpl implements UserService {
 		user.setRoles(roles);
 		userRep.save(user);
 
+		// Le code doit être unique en base : on régénère en cas de collision
+		// (900 000 combinaisons possibles).
 		String code = generateCode();
+		while (verificationTokenRep.findByToken(code) != null) {
+			code = generateCode();
+		}
 		verificationTokenRep.save(new VerificationToken(code, user));
 		sendEmailUser(user, code);
 

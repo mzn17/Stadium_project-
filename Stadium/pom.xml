@@ -73,6 +73,17 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-rest</artifactId>
 </dependency>
+
+<!-- Sécurisation des endpoints : vérification du JWT émis par users-microservice -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.auth0</groupId>
+    <artifactId>java-jwt</artifactId>
+    <version>3.4.1</version>
+</dependency>
 		
 		
 		
